@@ -1,6 +1,6 @@
 package com.chanel.toy.nemo;
 
-import com.chanel.toy.nemo.repository.TodoItemActionLogRepository;
+import com.chanel.toy.nemo.repository.TodoItemActionRepository;
 import com.chanel.toy.nemo.repository.TodoItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +13,7 @@ public class NemoApplication {
     private TodoItemRepository todoItemRepository;
 
     @Autowired
-    private TodoItemActionLogRepository todoItemActionLogRepository;
+    private TodoItemActionRepository todoItemActionRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(NemoApplication.class, args);
