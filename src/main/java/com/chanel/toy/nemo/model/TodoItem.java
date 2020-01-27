@@ -1,9 +1,6 @@
 package com.chanel.toy.nemo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,8 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class TodoItem {
     @Id
@@ -26,8 +21,19 @@ public class TodoItem {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public void setId(Long id) {
-        this.id = id;
+    public TodoItem() {}
+
+    public TodoItem(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public void setDeletedAt(LocalDateTime deletedAt) {
