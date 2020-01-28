@@ -28,8 +28,8 @@ public class TodoItemActionService {
 
     // @todo 삭제된 것 미노출,
     // TODO: 2020/01/27  todoId와 Date 사용하여 검색하도록 변경 필요
-    public List<TodoItemAction> findAllByTodoIdOrDate(Long todoId, LocalDate date) {
-        return todoItemActionRepository.findAllByTodoIdOrDate(todoId, date);
+    public List<TodoItemAction> findAllByTodoIdOrStartAtIsLessThanEqual(Long todoId, LocalDate date) {
+        return todoItemActionRepository.findAllByTodoIdOrStartAtIsLessThanEqual(todoId, date);
     }
 
     public void delete(TodoItemAction todoItemAction) {

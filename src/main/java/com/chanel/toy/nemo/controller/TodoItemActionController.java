@@ -48,8 +48,8 @@ public class TodoItemActionController {
     })
     @GetMapping(value="/actions", produces = "application/json")
     public ResponseEntity<List<TodoItemAction>> readAllActions(
-        @Parameter(description="action 목록을 조회할 todo 아이템 ID", required = false) @RequestParam Long todoId,
-        @Parameter(description="action 목록을 조회할 날", required = false) @RequestParam LocalDate date
+        @Parameter(description="action 목록을 조회할 todo 아이템 ID") @RequestParam(required = false) Long todoId,
+        @Parameter(description="action 목록을 조회할 날") @RequestParam(required = false) LocalDate date
     ) {
         if (ObjectUtils.isEmpty(date)) {
             date = LocalDate.now();
@@ -59,7 +59,7 @@ public class TodoItemActionController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(todoItemActionService.findAllByTodoIdOrDate(todoId, date), HttpStatus.OK);
+        return new ResponseEntity<>(todoItemActionService.findAllByTodoIdOrStartAtIsLessThanEqual(todoId, date), HttpStatus.OK);
     }
 
     @Operation(

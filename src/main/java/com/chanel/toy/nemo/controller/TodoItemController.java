@@ -49,7 +49,7 @@ public class TodoItemController {
         ),
         @ApiResponse(responseCode = "400", description = "name and color are required")
     })
-    @PostMapping(value="/todos")
+    @PostMapping(value="/todos", consumes = "application/json")
     public ResponseEntity<TodoItem> create(
         @Parameter(required=true, schema=@Schema(implementation = TodoItemForm.class))
            @Valid @RequestBody TodoItemForm todoItemForm) {

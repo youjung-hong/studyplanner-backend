@@ -7,5 +7,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TodoItemActionRepository extends JpaRepository<TodoItemAction, Long> {
-    public List<TodoItemAction> findAllByTodoIdOrDate(Long todoId, LocalDate date);
+    List<TodoItemAction> findAllByTodoIdOrStartAtIsLessThanEqual(Long todoId, LocalDate date);
 }
