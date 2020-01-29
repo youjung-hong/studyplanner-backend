@@ -75,14 +75,9 @@ public class TodoItemController {
     public ResponseEntity<TodoItem> read(
         @Parameter(description="찾고자 하는 todo 아이템의 ID", required=true) @PathVariable Long todoId
     ) {
-
-        Optional<TodoItem> opt = todoItemService.findById(todoId);
-
-        if (!opt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(opt.get(), HttpStatus.OK);
+        return todoItemService.findById(todoId)
+                .map(todoItem -> new ResponseEntity<>(todoItem, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @Operation(summary = "저장되어 있는 todo 아이템을 폼 데이터로 업데이트합니다.", tags = { "todo" })

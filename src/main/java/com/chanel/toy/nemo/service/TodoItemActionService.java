@@ -1,9 +1,7 @@
 package com.chanel.toy.nemo.service;
 
-import com.chanel.toy.nemo.model.TodoItem;
 import com.chanel.toy.nemo.model.TodoItemAction;
 import com.chanel.toy.nemo.repository.TodoItemActionRepository;
-import com.chanel.toy.nemo.repository.TodoItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +24,9 @@ public class TodoItemActionService {
         return todoItemActionRepository.findById(id);
     }
 
-    // @todo 삭제된 것 미노출,
-    // TODO: 2020/01/27  todoId와 Date 사용하여 검색하도록 변경 필요
-    public List<TodoItemAction> findAllByTodoIdOrStartAtIsLessThanEqual(Long todoId, LocalDate date) {
-        return todoItemActionRepository.findAllByTodoIdOrStartAtIsLessThanEqual(todoId, date);
+    // @todo 삭제된 것 미노출
+    public List<TodoItemAction> findActionsByTodoIdAndDate(Long todoId, LocalDate date) {
+        return todoItemActionRepository.findActionsByTodoIdAndDate(todoId, date);
     }
 
     public void delete(TodoItemAction todoItemAction) {

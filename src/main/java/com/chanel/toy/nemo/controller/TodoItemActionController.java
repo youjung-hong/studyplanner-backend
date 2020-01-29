@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -49,17 +50,13 @@ public class TodoItemActionController {
     @GetMapping(value="/actions", produces = "application/json")
     public ResponseEntity<List<TodoItemAction>> readAllActions(
         @Parameter(description="action 목록을 조회할 todo 아이템 ID") @RequestParam(required = false) Long todoId,
-        @Parameter(description="action 목록을 조회할 날") @RequestParam(required = false) LocalDate date
+        @Parameter(description="action 목록을 조회할 날") @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date
     ) {
-        if (ObjectUtils.isEmpty(date)) {
-            date = LocalDate.now();
-        }
-
         if (!ObjectUtils.isEmpty(todoId) && !todoItemService.findById(todoId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(todoItemActionService.findAllByTodoIdOrStartAtIsLessThanEqual(todoId, date), HttpStatus.OK);
+        return new ResponseEntity<>(todoItemActionService.findActionsByTodoIdAndDate(todoId, date), HttpStatus.OK);
     }
 
     @Operation(
@@ -78,7 +75,7 @@ public class TodoItemActionController {
         @Parameter(required=true, schema=@Schema(implementation = TodoItemActionForm.class))
             @Valid @RequestBody TodoItemActionForm todoItemActionForm
     ) {
-        if (!this.isInvalidInput(todoItemActionForm) ||
+        if (this.isInvalidInput(todoItemActionForm) ||
                 !todoItemService.findById(todoItemActionForm.todoId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -103,13 +100,9 @@ public class TodoItemActionController {
     public ResponseEntity<TodoItemAction> readAction(
         @Parameter(description="찾고자 하는 action ID", required = true) @PathVariable Long actionId
     ) {
-        Optional<TodoItemAction> opt = todoItemActionService.findById(actionId);
-
-        if (!opt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(opt.get(), HttpStatus.OK);
+        return todoItemActionService.findById(actionId)
+                .map(action -> new ResponseEntity<>(action, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @Operation(summary = "저장되어 있는 action 정보를 폼 데이터로 업데이트합니다.", tags = { "action" })
@@ -127,7 +120,8 @@ public class TodoItemActionController {
         @Parameter(required=true, schema=@Schema(implementation = TodoItemActionForm.class))
             @Valid @RequestBody TodoItemActionForm todoItemActionForm
     ) {
-        if (this.isInvalidInput(todoItemActionForm)) {
+        if (this.isInvalidInput(todoItemActionForm)
+                || !todoItemService.findById(todoItemActionForm.todoId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
