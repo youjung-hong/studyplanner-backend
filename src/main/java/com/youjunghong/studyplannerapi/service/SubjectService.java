@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,9 +21,10 @@ public class SubjectService {
     public Page<Subject> findAll(Pageable pageable) {
         pageable = PageRequest.of(
                 pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-                pageable.getPageSize()
+                pageable.getPageSize(),
+                Sort.by("id").descending()
         );
-        return subjectRepository.findAll(pageable);
+        return subjectRepository.findAllByDeletedAtIsNull(pageable);
     }
 
     public Subject save(Subject subject) {

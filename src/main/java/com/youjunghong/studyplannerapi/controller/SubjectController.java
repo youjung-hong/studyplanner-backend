@@ -33,7 +33,7 @@ public class SubjectController {
                 .build()
         );
 
-        return new ResponseEntity<>(SubjectResDto.toSubjectResDto(created), HttpStatus.OK);
+        return new ResponseEntity<>(SubjectResDto.toSubjectResDto(created), HttpStatus.CREATED);
     }
 
     @GetMapping("/subjects/{id}")
