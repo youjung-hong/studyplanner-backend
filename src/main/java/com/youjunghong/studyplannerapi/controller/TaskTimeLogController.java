@@ -20,7 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class TaskTimeLogController {
@@ -30,23 +32,36 @@ public class TaskTimeLogController {
     @Autowired
     private TaskTimeLogService taskTimeLogService;
 
-    @GetMapping("/tasks/{taskId}/logs")
-    public ResponseEntity<Page<TaskTimeLogResDto>> findAll(
-            @PathVariable Long taskId,
-            @PageableDefault Pageable pageable
+    @GetMapping("/tasktimelogs")
+    public ResponseEntity<List<TaskTimeLogResDto>> findAllByDate(
+            @RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date
     ) {
-        Optional<Task> opt = taskService.findOne(taskId);
-
-        if (!opt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(taskTimeLogService.findAll(opt.get(), pageable).map(TaskTimeLogResDto::toTaskTimeLogResDto), HttpStatus.OK);
+        List<TaskTimeLogResDto> taskTimeLogResDtos = taskTimeLogService.findAll(date)
+                .stream().map(TaskTimeLogResDto::toTaskTimeLogResDto)
+                .collect(Collectors.toList());;
+        return new ResponseEntity<>(taskTimeLogResDtos, HttpStatus.OK);
     }
+
+//    @GetMapping("/tasks/{taskId}/logs")
+//    public ResponseEntity<List<TaskTimeLogResDto>> findAll(
+//            @PathVariable Long taskId,
+//            @RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date
+//    ) {
+//        Optional<Task> opt = taskService.findAllByTaskId(taskId);
+//
+//        if (!opt.isPresent()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//
+//        List<TaskTimeLogResDto> taskTimeLogResDtos = taskTimeLogService.findAll(opt.get(), date)
+//                .stream().map(TaskTimeLogResDto::toTaskTimeLogResDto)
+//                .collect(Collectors.toList());
+//
+//        return new ResponseEntity<>(taskTimeLogResDtos, HttpStatus.OK);
+//    }
 
     @PostMapping("/tasks/{taskId}/logs")
     public ResponseEntity<TaskTimeLogResDto> create(@PathVariable Long taskId, @RequestBody TaskTimeLogReqDto taskTimeLogReqDto) {
-        taskTimeLogReqDto.setTaskId(taskId);
         Optional<Task> opt = taskService.findOne(taskId);
 
         if (!opt.isPresent()) {
@@ -88,7 +103,7 @@ public class TaskTimeLogController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        opt = taskService.findOne(taskTimeLogReqDto.getTaskId());
+        opt = taskService.findOne(taskId);
 
         if (!opt.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -14,11 +14,19 @@ import java.time.LocalDate;
 public class TaskResDto {
     private Long id;
     private Long subjectId;
+    private String subjectTitle;
     private LocalDate date;
     private String title;
-    private TaskStatus taskStatus;
+    private TaskStatus status;
 
     public static TaskResDto toTaskResDto(Task task) {
-        return new TaskResDto(task.getId(), task.getSubject().getId(), task.getDate(), task.getTitle(), task.getStatus());
+        return new TaskResDto(
+            task.getId(),
+            task.getSubject().getId(),
+            task.getSubject().getTitle(),
+            task.getDate(),
+            task.getTitle(),
+            task.getStatus()
+        );
     }
 }

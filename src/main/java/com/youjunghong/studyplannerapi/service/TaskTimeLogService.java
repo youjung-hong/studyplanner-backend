@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,12 +20,8 @@ public class TaskTimeLogService {
     @Autowired
     private TaskTimeLogRepository taskTimeLogRepository;
 
-    public Page<TaskTimeLog> findAll(Task task, Pageable pageable) {
-        pageable = PageRequest.of(
-                pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-                pageable.getPageSize()
-        );
-        return taskTimeLogRepository.findAllByTask(task, pageable);
+    public List<TaskTimeLog> findAll(LocalDate date) {
+        return taskTimeLogRepository.findAllByDate(date);
     }
 
     public TaskTimeLog save(TaskTimeLog taskTimeLog) {

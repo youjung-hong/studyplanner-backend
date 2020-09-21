@@ -1,5 +1,6 @@
 package com.youjunghong.studyplannerapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.youjunghong.studyplannerapi.domain.enums.TaskStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +25,11 @@ public class TaskTimeLog {
     private Long id;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startAt;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endAt;
 
     @Column(nullable = false)

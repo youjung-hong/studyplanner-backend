@@ -91,7 +91,7 @@ public class SubjectControllerTest {
         final ResultActions actions = this.mockMvc.perform(post("/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("-")
-                .content("{ \"title\": \"과목1\" }"))
+                .content("과목1"))
                 .andDo(print());
 
         actions.andExpect(status().isCreated())
@@ -110,7 +110,7 @@ public class SubjectControllerTest {
 
         final ResultActions actions = this.mockMvc.perform(put("/subjects/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"id\": 1, \"title\": \"과목2\" }"))
+                .content("과목2"))
                 .andDo(print());
 
         actions.andExpect(status().isOk())

@@ -1,5 +1,6 @@
 package com.youjunghong.studyplannerapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.youjunghong.studyplannerapi.domain.enums.TaskStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Task {
     private Long id;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @Column(nullable = false)

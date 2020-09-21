@@ -70,16 +70,21 @@ public class TaskController {
 
     @PutMapping("/tasks/{id}")
     public ResponseEntity<TaskResDto> update(@PathVariable("id") Long id, @RequestBody TaskReqDto taskReqDto) {
-        Optional<Task> opt = taskService.findOne(id);
-
-        if (!opt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Optional<Subject> subjectOpt = subjectService.findOne(taskReqDto.getSubjectId());
+        if (!subjectOpt.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Task found = opt.get();
+        Optional<Task> taskOpt = taskService.findOne(id);
+        if (!taskOpt.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Task found = taskOpt.get();
         found.setDate(taskReqDto.getDate());
         found.setTitle(taskReqDto.getTitle());
         found.setStatus(taskReqDto.getStatus());
+        found.setSubject(subjectOpt.get());
         Task updated = taskService.save(found);
 
         return new ResponseEntity<>(TaskResDto.toTaskResDto(updated), HttpStatus.OK);
