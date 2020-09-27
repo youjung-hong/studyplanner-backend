@@ -4,12 +4,14 @@ import com.youjunghong.studyplannerapi.domain.Subject;
 import com.youjunghong.studyplannerapi.domain.Task;
 import com.youjunghong.studyplannerapi.repository.SubjectRepository;
 import com.youjunghong.studyplannerapi.repository.TaskRepository;
+import com.youjunghong.studyplannerapi.repository.TaskTimeLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,6 +20,9 @@ import java.util.Optional;
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private TaskTimeLogRepository taskTimeLogRepository;
 
     public Page<Task> findAll(LocalDate date, Pageable pageable) {
         pageable = PageRequest.of(
@@ -35,8 +40,11 @@ public class TaskService {
         return taskRepository.findById(id);
     }
 
+    @Transactional
     public void delete(Task task) {
         task.setDeletedAt(LocalDateTime.now());
         this.save(task);
+
+        taskTimeLogRepository.deleteAll(taskTimeLogRepository.findAllByTaskId(task.getId()));
     }
 }
