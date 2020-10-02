@@ -6,6 +6,10 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comment: true
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
 
 logging:
   level:

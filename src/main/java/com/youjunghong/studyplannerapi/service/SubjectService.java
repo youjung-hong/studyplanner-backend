@@ -1,7 +1,6 @@
 package com.youjunghong.studyplannerapi.service;
 
 import com.youjunghong.studyplannerapi.domain.Subject;
-import com.youjunghong.studyplannerapi.dto.SubjectResDto;
 import com.youjunghong.studyplannerapi.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ public class SubjectService {
 
     public Page<Subject> findAll(Pageable pageable) {
         pageable = PageRequest.of(
-                pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
+                pageable.getPageNumber(),
                 pageable.getPageSize(),
                 Sort.by("id").descending()
         );
